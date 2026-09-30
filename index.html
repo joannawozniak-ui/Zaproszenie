@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Zaproszenie Urodzinowe 🥂</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Canvas Confetti CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --font-main: 'Plus Jakarta Sans', sans-serif;
+            --font-heading: 'Cinzel', serif;
+            --font-serif: 'Playfair Display', serif;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: #0b132b;
+            touch-action: manipulation;
+            user-select: none;
+            -webkit-user-select: none;
+            overflow-x: hidden;
+            color: #e2e8f0;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        .font-heading { font-family: var(--font-heading); }
+        .font-serif-italic { font-family: var(--font-serif); font-style: italic; }
+
+        /* Deep Midnight Navy Atmosphere */
+        .bg-midnight {
+            background: 
+                radial-gradient(circle at 50% 20%, rgba(224, 169, 109, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 85% 85%, rgba(28, 37, 65, 0.9) 0%, transparent 55%),
+                radial-gradient(circle at 15% 80%, rgba(58, 80, 107, 0.5) 0%, transparent 50%),
+                linear-gradient(135deg, #0b132b 0%, #1c2541 50%, #0b132b 100%);
+            background-attachment: fixed;
+        }
+
+        /* Continuous Falling Confetti Background Canvas */
+        #bg-confetti-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Glassmorphism Card */
+        .glass-card {
+            background: rgba(28, 37, 65, 0.72);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(224, 169, 109, 0.3);
+            box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.8),
+                        0 0 30px rgba(224, 169, 109, 0.15),
+                        inset 0 1px 0 0 rgba(255, 255, 255, 0.15);
+        }
+
+        /* Metallic Gold Gradient & Glowing Text */
+        .gold-gradient-text {
+            background: linear-gradient(135deg, #fff1d6 0%, #f5d08d 35%, #e0a96d 70%, #be8447 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 2px 8px rgba(224, 169, 109, 0.3));
+        }
+
+        .gold-btn {
+            background: linear-gradient(135deg, #f5d08d 0%, #e0a96d 50%, #be8447 100%);
+            color: #0b132b;
+            box-shadow: 0 10px 25px -5px rgba(224, 169, 109, 0.5),
+                        0 0 15px rgba(224, 169, 109, 0.3);
+            transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.25s ease;
+        }
+
+        .gold-btn:hover {
+            background: linear-gradient(135deg, #fce0ad 0%, #e8b67d 50%, #cc9153 100%);
+            box-shadow: 0 15px 35px -5px rgba(224, 169, 109, 0.7),
+                        0 0 25px rgba(224, 169, 109, 0.5);
+        }
+
+        /* Dodging NIE Button */
+        #no-btn {
+            transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+            will-change: top, left, transform;
+        }
+
+        .animate-fade-in {
+            animation: fadeInReveal 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes fadeInReveal {
+            0% { opacity: 0; transform: translateY(25px) scale(0.95); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+    </style>
+</head>
+<body class="bg-midnight min-h-screen w-full flex items-center justify-center p-4 sm:p-6 relative overflow-x-hidden">
+
+    <!-- Continuous Background Confetti & Glow Canvas -->
+    <canvas id="bg-confetti-canvas"></canvas>
+
+    <!-- MAIN CONTAINER -->
+    <main class="relative z-10 w-full max-w-lg glass-card rounded-3xl p-6 sm:p-10 my-auto border border-amber-500/30">
+        
+        <!-- ================= EKRAN PYTANIA ================= -->
+        <div id="question-card" class="space-y-6 text-center">
+            
+            <!-- Header Tag -->
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 bg-amber-500/10 border border-amber-500/40 rounded-full shadow-inner">
+                <span class="text-amber-300 text-xs font-semibold uppercase tracking-widest font-heading">
+                    <i class="fa-solid fa-envelope-open-text mr-1.5"></i> Od Twojej Dziewczyny 💌
+                </span>
+            </div>
+
+            <!-- Title & Loving Message from Girlfriend -->
+            <div class="space-y-3">
+                <h1 class="text-3xl sm:text-4xl font-bold text-white font-heading tracking-tight leading-snug">
+                    Zaproszenie na <br>
+                    <span class="gold-gradient-text text-3xl sm:text-4xl font-extrabold uppercase tracking-wide">Kolację Urodzinową</span> 🥂
+                </h1>
+                
+                <div class="p-4 bg-slate-900/60 rounded-2xl border border-slate-700/80 text-slate-200 text-sm sm:text-base leading-relaxed font-serif-italic shadow-lg">
+                    Niedźwiadku! Z okazji Twoich Urodzin porywam Cię na wyjątkową kolację! Wchodzisz w to? 🥰✨
+                </div>
+            </div>
+
+            <!-- Interactive Buttons Area -->
+            <div id="button-wrapper" class="relative min-h-[180px] flex flex-col items-center justify-center gap-4 pt-2">
+                
+                <!-- Przycisk TAK (Glówny / Rosnący) -->
+                <button id="yes-btn" onclick="acceptDinner()" 
+                    class="gold-btn w-full max-w-xs font-extrabold py-4 px-8 rounded-2xl text-base sm:text-lg flex items-center justify-center gap-3 z-20 uppercase tracking-wider font-heading cursor-pointer">
+                    <i class="fa-solid fa-wine-glass-empty text-xl"></i>
+                    <span>JASNE, ŻE TAK! ❤️</span>
+                </button>
+
+                <!-- Przycisk NIE (Uciekający) -->
+                <button id="no-btn" 
+                    class="bg-slate-800/90 hover:bg-slate-700 text-slate-300 font-semibold py-3 px-6 rounded-xl border border-slate-600/80 text-sm z-10 backdrop-blur-md flex items-center gap-2 shadow-xl">
+                    <i class="fa-solid fa-xmark text-slate-400"></i>
+                    <span id="no-btn-text">Niestety nie mogę... 😜</span>
+                </button>
+
+            </div>
+
+            <!-- Hint Footer -->
+            <div class="pt-3 border-t border-slate-700/50">
+                <p id="hint-text" class="text-xs text-slate-300 font-medium flex items-center justify-center gap-2">
+                    <span class="inline-block w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
+                    <span>Proszę dokonać wyboru, Jubilacie! 😉</span>
+                </p>
+            </div>
+
+        </div>
+
+        <!-- ================= EKRAN SUKCESU ================= -->
+        <div id="success-card" class="hidden space-y-6 text-center animate-fade-in">
+            
+            <div class="inline-flex items-center justify-center w-16 h-16 bg-amber-500/15 border border-amber-500/50 rounded-2xl text-amber-300 text-3xl shadow-xl">
+                <i class="fa-solid fa-utensils"></i>
+            </div>
+
+            <div class="space-y-2">
+                <span class="text-xs font-mono uppercase tracking-widest text-amber-400 font-semibold">REZERWACJA POTWIERDZONA 🥂</span>
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-white font-heading">
+                    Będzie pysznie i wyjątkowo! 🎉❤️
+                </h2>
+                <p class="text-slate-300 text-sm font-serif-italic">
+                    Szykuj dobry apetyt i wspaniały nastrój. Poniżej masz wszystkie szczegóły naszej randki:
+                </p>
+            </div>
+
+            <!-- VIP Event Details -->
+            <div class="bg-slate-900/85 rounded-2xl p-5 sm:p-6 text-left border border-amber-500/40 space-y-4 shadow-2xl">
+                <div class="flex items-center justify-between border-b border-slate-700/80 pb-3">
+                    <span class="font-bold text-xs text-amber-300 uppercase tracking-widest font-heading flex items-center gap-2">
+                        <i class="fa-solid fa-star"></i> Szczegóły Kolacji
+                    </span>
+                    <span class="text-[10px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-2.5 py-0.5 rounded font-mono font-semibold">ZAREZERWOWANE</span>
+                </div>
+
+                <!-- Detail Rows -->
+                <div class="space-y-3.5 text-sm">
+                    <div class="flex items-start gap-3.5">
+                        <div class="p-2 bg-slate-800 rounded-xl text-amber-400 border border-slate-700 shrink-0 text-base">
+                            <i class="fa-regular fa-calendar-check"></i>
+                        </div>
+                        <div>
+                            <p class="text-[11px] text-slate-400 font-bold uppercase tracking-wider">Data</p>
+                            <p class="text-white font-semibold text-base"> 1.10.2026 </p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start gap-3.5">
+                        <div class="p-2 bg-slate-800 rounded-xl text-amber-400 border border-slate-700 shrink-0 text-base">
+                            <i class="fa-regular fa-clock"></i>
+                        </div>
+                        <div>
+                            <p class="text-[11px] text-slate-400 font-bold uppercase tracking-wider">Godzina</p>
+                            <p class="text-white font-semibold text-base">19:00</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start gap-3.5">
+                        <div class="p-2 bg-slate-800 rounded-xl text-amber-400 border border-slate-700 shrink-0 text-base">
+                            <i class="fa-solid fa-location-dot"></i>
+                        </div>
+                        <div>
+                            <p class="text-[11px] text-slate-400 font-bold uppercase tracking-wider">Miejsce</p>
+                            <p class="text-white font-semibold text-base">Overhoeksplein 3, 1031 KS Amsterdam</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start gap-3.5">
+                        <div class="p-2 bg-slate-800 rounded-xl text-amber-400 border border-slate-700 shrink-0 text-base">
+                            <i class="fa-solid fa-user-tie"></i>
+                        </div>
+                        <div>
+                            <p class="text-[11px] text-slate-400 font-bold uppercase tracking-wider">Dress Code</p>
+                            <p class="text-slate-200 font-medium text-xs sm:text-sm">Smart Casual / Wygodnie i z klasą</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start gap-3.5">
+                        <div class="p-2 bg-slate-800 rounded-xl text-amber-400 border border-slate-700 shrink-0 text-base">
+                            <i class="fa-solid fa-lightbulb"></i>
+                        </div>
+                        <div>
+                            <p class="text-[11px] text-slate-400 font-bold uppercase tracking-wider">Wskazówka</p>
+                            <p class="text-slate-200 font-medium text-xs sm:text-sm">Przygotuj duży apetyt - tego raczej nie zabraknie i zabierz ze sobą super humor! ❤️</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Screenshot Action Button -->
+            <button onclick="showConfirmation()" 
+                class="w-full bg-slate-800 hover:bg-slate-700 text-white font-bold py-3.5 px-6 rounded-xl border border-slate-600 transition duration-200 text-sm flex items-center justify-center gap-2 font-heading cursor-pointer shadow-lg">
+                <i class="fa-solid fa-heart text-rose-400"></i>
+                <span>Teraz mi pokaż czy się zgodziłeś i daj buziaka! 😘</span>
+            </button>
+
+        </div>
+
+    </main>
+
+    <script>
+        // --- 1. CONTINUOUS FALLING BACKGROUND CONFETTI & SPARKLES ---
+        const bgCanvas = document.getElementById('bg-confetti-canvas');
+        const bgCtx = bgCanvas.getContext('2d');
+        let bgParticles = [];
+
+        function resizeBgCanvas() {
+            bgCanvas.width = window.innerWidth;
+            bgCanvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeBgCanvas);
+        resizeBgCanvas();
+
+        const colors = [
+            '#f5d08d', '#e0a96d', '#be8447', '#ffffff', 
+            '#3a506b', '#1c2541', '#f43f5e', '#fbbf24'
+        ];
+
+        class FallingConfetti {
+            constructor() {
+                this.reset();
+            }
+
+            reset() {
+                this.x = Math.random() * bgCanvas.width;
+                this.y = Math.random() * -bgCanvas.height;
+                this.size = Math.random() * 6 + 4;
+                this.speedY = Math.random() * 1.5 + 0.8;
+                this.speedX = (Math.random() - 0.5) * 1;
+                this.rotation = Math.random() * 360;
+                this.rotationSpeed = (Math.random() - 0.5) * 4;
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+                this.opacity = Math.random() * 0.7 + 0.3;
+                this.isCircle = Math.random() > 0.5;
+            }
+
+            update() {
+                this.y += this.speedY;
+                this.x += Math.sin(this.y * 0.01) * 0.5 + this.speedX;
+                this.rotation += this.rotationSpeed;
+
+                if (this.y > bgCanvas.height + 20) {
+                    this.reset();
+                    this.y = -10;
+                }
+            }
+
+            draw() {
+                bgCtx.save();
+                bgCtx.translate(this.x, this.y);
+                bgCtx.rotate((this.rotation * Math.PI) / 180);
+                bgCtx.globalAlpha = this.opacity;
+                bgCtx.fillStyle = this.color;
+
+                if (this.isCircle) {
+                    bgCtx.beginPath();
+                    bgCtx.arc(0, 0, this.size / 2, 0, Math.PI * 2);
+                    bgCtx.fill();
+                } else {
+                    bgCtx.fillRect(-this.size / 2, -this.size / 2, this.size, this.size * 0.6);
+                }
+
+                bgCtx.restore();
+            }
+        }
+
+        // Initialize background confetti particles
+        const particleCount = Math.min(Math.floor(window.innerWidth / 12), 70);
+        for (let i = 0; i < particleCount; i++) {
+            const p = new FallingConfetti();
+            p.y = Math.random() * bgCanvas.height; // Spread initially
+            bgParticles.push(p);
+        }
+
+        function renderBackground() {
+            bgCtx.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
+            bgParticles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            requestAnimationFrame(renderBackground);
+        }
+        renderBackground();
+
+
+        // --- 2. DODGING "NIE" BUTTON LOGIC ---
+        const noBtn = document.getElementById('no-btn');
+        const noBtnText = document.getElementById('no-btn-text');
+        const yesBtn = document.getElementById('yes-btn');
+        const hintText = document.getElementById('hint-text');
+
+        let attempts = 0;
+        let yesScale = 1;
+
+        const gfResponses = [
+            "I tak idziesz ze mną! 🥰",
+            "Nie uciekniesz! ❤️",
+            "Opcja zablokowana 🔒",
+            "Chyba śnisz! 💭",
+            "Brak dostępu! 😂",
+            "Zły przycisk 😉",
+            "Przycisk uszkodzony! ⚡",
+            "Brak odwrotu, Kochanie! 🔥"
+        ];
+
+        const hintMessages = [
+            "⚠️ Ten przycisk odmawia posłuszeństwa!",
+            "😜 Mówiłam, że nie masz wyjścia!",
+            "🔥 Patrz, jak przycisk TAK robi się coraz większy!",
+            "🥰 I tak zabieram Cię na kolację!",
+            "🎯 Poddaj się i wybierz złote TAK! 👇"
+        ];
+
+        function dodgeNoButton(e) {
+            if (e) e.preventDefault();
+            attempts++;
+
+            // Grow YES button
+            yesScale += 0.14;
+            yesBtn.style.transform = `scale(${yesScale})`;
+
+            // Cycle text
+            const textIndex = (attempts - 1) % gfResponses.length;
+            noBtnText.innerText = gfResponses[textIndex];
+
+            // Update hint
+            if (attempts <= hintMessages.length) {
+                hintText.innerHTML = `<span class="inline-block w-2 h-2 rounded-full bg-amber-400 animate-ping"></span> ${hintMessages[attempts - 1]}`;
+            } else {
+                hintText.innerHTML = `<span class="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Poddaj się i wybierz TAK! ❤`;
+            }
+
+            // Move NO button away
+            const padding = 25;
+            const btnRect = noBtn.getBoundingClientRect();
+            
+            const maxX = window.innerWidth - btnRect.width - padding;
+            const maxY = window.innerHeight - btnRect.height - padding;
+
+            const randomX = Math.max(padding, Math.floor(Math.random() * maxX));
+            const randomY = Math.max(padding, Math.floor(Math.random() * maxY));
+
+            noBtn.style.position = 'fixed';
+            noBtn.style.left = `${randomX}px`;
+            noBtn.style.top = `${randomY}px`;
+        }
+
+        noBtn.addEventListener('mouseenter', dodgeNoButton);
+        noBtn.addEventListener('touchstart', dodgeNoButton, { passive: false });
+        noBtn.addEventListener('pointerover', dodgeNoButton);
+
+
+        // --- 3. ACCEPT DINNER (TAK) & GRAND CONFETTI BLAST ---
+        function acceptDinner() {
+            document.getElementById('question-card').classList.add('hidden');
+            document.getElementById('success-card').classList.remove('hidden');
+
+            fireGrandConfettiBurst();
+        }
+
+        function fireGrandConfettiBurst() {
+            const duration = 3 * 1000;
+            const end = Date.now() + duration;
+
+            (function frame() {
+                confetti({
+                    particleCount: 8,
+                    angle: 60,
+                    spread: 70,
+                    origin: { x: 0 },
+                    colors: ['#f5d08d', '#e0a96d', '#ffffff', '#f43f5e', '#3a506b']
+                });
+                confetti({
+                    particleCount: 8,
+                    angle: 120,
+                    spread: 70,
+                    origin: { x: 1 },
+                    colors: ['#f5d08d', '#e0a96d', '#ffffff', '#f43f5e', '#3a506b']
+                });
+
+                if (Date.now() < end) {
+                    requestAnimationFrame(frame);
+                }
+            })();
+        }
+
+        // Confirmation Modal
+        function showConfirmation() {
+            const popup = document.createElement('div');
+            popup.className = "fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4 animate-fade-in";
+            popup.innerHTML = `
+                <div class="bg-slate-900 border border-amber-500/50 rounded-2xl p-6 max-w-xs text-center space-y-4 shadow-2xl text-white">
+                    <div class="text-4xl text-amber-400"><i class="fa-solid fa-camera-retro"></i></div>
+                    <h3 class="font-bold text-lg font-heading text-amber-300">Gotowe! 🎉</h3>
+                    <p class="text-xs text-slate-300 leading-relaxed">Zrób zrzut ekranu tej karty i wyślij mi go w wiadomości z buziakiem! Nie mogę się doczekać naszej kolacji! ❤️🥂</p>
+                    <button onclick="this.parentElement.parentElement.remove()" class="w-full gold-btn font-extrabold py-2.5 rounded-xl text-sm font-heading cursor-pointer">Super, robię screena! 👌</button>
+                </div>
+            `;
+            document.body.appendChild(popup);
+        }
+    </script>
+</body>
+</html>
